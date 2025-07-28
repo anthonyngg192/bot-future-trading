@@ -44,7 +44,5 @@ tradeSocket.on("message", (data) => {
   // Nếu giá này không còn trong depth → khả năng khớp lệnh
   if (!existed) {
     console.log(`[TRADE] ${side} ${qty} SOL @ ${price} (LIKELY MATCHED)`);
-  } else {
-    console.log(`[TRADE] ${side} ${qty} SOL @ ${price}`);
-  }
+  } 
 });

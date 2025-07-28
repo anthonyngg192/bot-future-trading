@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 
-const CAPITAL_LIMIT = 100;
+const CAPITAL_LIMIT = 1000;
 const ORDER_UNIT = 10;
 
 let capitalInUse = 0;
@@ -76,16 +76,16 @@ function showSummary() {
     );
   }
 
-  if (activeTrades.length > 0) {
-    console.log(`⏳ Active Orders:`);
-    activeTrades.forEach((t, i) =>
-      console.log(
-        ` - #${i + 1} ${t.qty} SOL @ ${t.buyPrice.toFixed(2)} (target: ${
-          t.sellTarget
-        })`
-      )
-    );
-  }
+  // if (activeTrades.length > 0) {
+  //   console.log(`⏳ Active Orders:`);
+  //   activeTrades.forEach((t, i) =>
+  //     console.log(
+  //       ` - #${i + 1} ${t.qty} SOL @ ${t.buyPrice.toFixed(2)} (target: ${
+  //         t.sellTarget
+  //       })`
+  //     )
+  //   );
+  // }
 
   const sign = profit_per_process >= 0 ? "🟢 LỜI" : "🔴 LỖ";
   console.log(`\n→ Total Profit: ${profit_per_process} USDT (${sign})`);
@@ -121,10 +121,10 @@ function maybeSimulateTrade() {
   const liquidityRatio = bidVol / askVol;
   const priceDiff = parseFloat(lastTrade.p) - parseFloat(markPrice);
 
-  if (liquidityRatio > 2) score += 1;
-  if (liquidityRatio > 3.5) score += 1;
+  if (liquidityRatio > 4) score += 1;
+  if (liquidityRatio > 5.5) score += 1;
 
-  if (liquidityRatio < 0.66) score -= 1;
+  if (liquidityRatio < 0.4) score -= 1;
 
   if (spread < 0.002) score += 1;
   if (spread > 0.01) score -= 1;
