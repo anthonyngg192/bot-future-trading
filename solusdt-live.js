@@ -88,26 +88,28 @@ function showSummary() {
   // }
 
   const sign = profit_per_process >= 0 ? "🟢 LỜI" : "🔴 LỖ";
-  console.log(`\n→ Total Profit: ${profit_per_process} USDT (${sign})`);
+  console.log(
+    `\n→ Total Profit: ${profit_per_process.toFixed(2)} USDT (${sign})`
+  );
 
-  if (tradeHistory.length > lastPrintedTradeCount) {
-    const recent = tradeHistory.slice(-10);
-    console.log("\n=== HISTORY ===");
-    recent.forEach((t, i) => {
-      const idx = tradeHistory.length - recent.length + i + 1;
-      const profitSign = parseFloat(t.profit) >= 0 ? "+" : "";
-      const duration = getSecondsDiff(t.buyTime, t.sellTime);
-      console.log(
-        `#${idx} BUY @ ${Number(t.buy).toFixed(2)} → SELL @ ${Number(
-          t.sell
-        ).toFixed(2)} = PROFIT ${profitSign}${t.profit} USDT`
-      );
-      console.log(
-        `   🕒 BUY: ${t.buyTime} | SELL: ${t.sellTime} | ΔT: ${duration}s`
-      );
-    });
-    lastPrintedTradeCount = tradeHistory.length;
-  }
+  // if (tradeHistory.length > lastPrintedTradeCount) {
+  //   const recent = tradeHistory.slice(-10);
+  //   console.log("\n=== HISTORY ===");
+  //   recent.forEach((t, i) => {
+  //     const idx = tradeHistory.length - recent.length + i + 1;
+  //     const profitSign = parseFloat(t.profit) >= 0 ? "+" : "";
+  //     const duration = getSecondsDiff(t.buyTime, t.sellTime);
+  //     console.log(
+  //       `#${idx} BUY @ ${Number(t.buy).toFixed(2)} → SELL @ ${Number(
+  //         t.sell
+  //       ).toFixed(2)} = PROFIT ${profitSign}${t.profit} USDT`
+  //     );
+  //     console.log(
+  //       `   🕒 BUY: ${t.buyTime} | SELL: ${t.sellTime} | ΔT: ${duration}s`
+  //     );
+  //   });
+  //   lastPrintedTradeCount = tradeHistory.length;
+  // }
 }
 
 function maybeSimulateTrade() {
@@ -298,7 +300,9 @@ tradeSocket.on("message", (msg) => {
         sellTime: t.sellTime,
       });
 
-      profit_per_process += (currentPrice - t.buyPrice).toFixed(2);
+      profit_per_process += Math.abs(
+        parseFloat((currentPrice - parseFloat(t.buyPrice)).toFixed(2))
+      );
       capitalInUse -= ORDER_UNIT;
       setTimeout(() => showSummary(), 10);
       return false;
@@ -319,7 +323,9 @@ tradeSocket.on("message", (msg) => {
         buyBackTime: t.sellTime,
       });
 
-      profit_per_process += t.buyPrice - currentPrice;
+      profit_per_process += Math.abs(
+        parseFloat((currentPrice - t.buyPrice).toFixed(2))
+      );
       capitalInUse -= ORDER_UNIT;
       setTimeout(() => showSummary(), 10);
       return false;

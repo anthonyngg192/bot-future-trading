@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  bot-sol-testing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: solusdt-simulator
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+    command: node solusdt-live.js
