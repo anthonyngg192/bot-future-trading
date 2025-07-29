@@ -65,16 +65,16 @@ function showSummary() {
   );
   console.log("---");
 
-  if (pendingTrades.length > 0) {
-    console.log(`⏳ Pending BUY Orders:`);
-    pendingTrades.forEach((t, i) =>
-      console.log(
-        ` - #${i + 1} ${t.qty} SOL @ ${t.buyPrice.toFixed(2)} (target: ${
-          t.sellTarget
-        }) Type: ${t.type === "Buy" ? "🟢 Long" : "🔴 Short"}`
-      )
-    );
-  }
+  // if (pendingTrades.length > 0) {
+  //   console.log(`⏳ Pending BUY Orders:`);
+  //   pendingTrades.forEach((t, i) =>
+  //     console.log(
+  //       ` - #${i + 1} ${t.qty} SOL @ ${t.buyPrice.toFixed(2)} (target: ${
+  //         t.sellTarget
+  //       }) Type: ${t.type === "Buy" ? "🟢 Long" : "🔴 Short"}`
+  //     )
+  //   );
+  // }
 
   // if (activeTrades.length > 0) {
   //   console.log(`⏳ Active Orders:`);
@@ -111,7 +111,7 @@ function showSummary() {
 }
 
 function maybeSimulateTrade() {
-  const openSlots = Math.floor((CAPITAL_LIMIT - capitalInUse) / ORDER_UNIT);
+  const openSlots = CAPITAL_LIMIT - capitalInUse;
 
   let score = 0;
   if (!bestAsk || !bestBid) {
@@ -298,7 +298,7 @@ tradeSocket.on("message", (msg) => {
         sellTime: t.sellTime,
       });
 
-      profit_per_process += currentPrice - t.buyPrice;
+      profit_per_process += (currentPrice - t.buyPrice).toFixed(2);
       capitalInUse -= ORDER_UNIT;
       setTimeout(() => showSummary(), 10);
       return false;
